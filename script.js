@@ -55,5 +55,70 @@ document.querySelectorAll('.number').forEach(button => {
     });
 });
 
+// Function to handle operators
+function handleOperator(op) {
+    // If there's already a pending operation, calculate first
+    if (operation && !resetInput) {
+        calculate();
+    }
+    
+    previousInput = currentInput;
+    operation = op;
+    resetInput = true;
+    updateDisplay();
+}
+
+// Function to calculate the result
+function calculate() {
+    let result;
+    const prev = parseFloat(previousInput);
+    const current = parseFloat(currentInput);
+    
+    if (isNaN(prev) || isNaN(current)) return;
+    
+    switch (operation) {
+        case '+':
+            result = prev + current;
+            break;
+        case '-':
+            result = prev - current;
+            break;
+        case '*':
+            result = prev * current;
+            break;
+        case '/':
+            result = prev / current;
+            break;
+        default:
+            return;
+    }
+    
+    currentInput = result.toString();
+    operation = null;
+    resetInput = true;
+    updateDisplay();
+}
+
+// Add event listeners to operator buttons
+document.querySelectorAll('.operator').forEach(button => {
+    button.addEventListener('click', () => {
+        const operatorText = button.textContent;
+        if (operatorText === '=') {
+            calculate();
+        } else {
+            // Map symbols to operators
+            let op;
+            switch (operatorText) {
+                case '+': op = '+'; break;
+                case '−': op = '-'; break;
+                case '×': op = '*'; break;
+                case '÷': op = '/'; break;
+                default: op = operatorText;
+            }
+            handleOperator(op);
+        }
+    });
+});
+
 // Initialize display
 updateDisplay();
