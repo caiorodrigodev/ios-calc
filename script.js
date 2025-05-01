@@ -8,14 +8,13 @@ const resultElement = document.getElementById('result');
 const historyElement = document.getElementById('history');
 const clearButton = document.getElementById('clear-button');
 
-// Initialize the clear button and add its event
+// Inicializar o botão de limpar e adicionar o evento
 clearButton.addEventListener('click', handleClear);
 
 function updateDisplay() {
-    // Show comma as decimal separator to the user
     resultElement.textContent = currentInput;
     
-    // Adjusts the font size based on the length of the number
+    // Ajusta o tamanho da fonte baseado no comprimento do número
     if (currentInput.length > 9) {
         resultElement.classList.add('result-small');
         resultElement.classList.remove('result-smaller');
@@ -28,13 +27,12 @@ function updateDisplay() {
     }
     
     if (operation) {
-        // Also show comma in the history
         historyElement.textContent = `${previousInput} ${getOperatorSymbol(operation)}`;
     } else {
         historyElement.textContent = '';
     }
     
-    // Updates the text of the clear button
+    // Atualiza o texto do botão de limpar
     updateClearButtonText();
 }
 
@@ -44,10 +42,10 @@ function updateClearButtonText() {
 
 function handleClear() {
     if (allClear) {
-        // AC - Clears everything
+        // AC - Limpa tudo
         clearAll();
     } else {
-        // C - Clears only the current entry
+        // C - Limpa apenas a entrada atual
         clearEntry();
     }
 }
@@ -93,7 +91,7 @@ function appendNumber(number) {
     }
     
     // Prevent multiple decimal points
-    if (number === ',' && currentInput.includes(',')) {
+    if (number === '.' && currentInput.includes('.')) {
         currentInput = currentInput.slice(0, -1);
     }
     
@@ -208,7 +206,7 @@ updateDisplay();
 // Add keyboard support
 document.addEventListener('keydown', (e) => {
     if (e.key >= '0' && e.key <= '9') appendNumber(e.key);
-    else if (e.key === ',') appendNumber(',');
+    else if (e.key === '.') appendNumber('.');
     else if (e.key === '+') operator('+');
     else if (e.key === '-') operator('-');
     else if (e.key === '*') operator('*');
