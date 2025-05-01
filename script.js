@@ -192,5 +192,34 @@ function appendNumber(number) {
     updateDisplay();
 }
 
+// Add keyboard support
+document.addEventListener('keydown', (e) => {
+    if (e.key >= '0' && e.key <= '9') {
+        appendNumber(e.key);
+    } else if (e.key === '.') {
+        appendNumber('.');
+    } else if (e.key === '+') {
+        handleOperator('+');
+    } else if (e.key === '-') {
+        handleOperator('-');
+    } else if (e.key === '*') {
+        handleOperator('*');
+    } else if (e.key === '/') {
+        handleOperator('/');
+    } else if (e.key === 'Enter' || e.key === '=') {
+        calculate();
+    } else if (e.key === 'Escape') {
+        clearAll();
+    } else if (e.key === 'Backspace' || e.key === 'Delete') {
+        if (allClear) {
+            clearAll();
+        } else {
+            clearEntry();
+        }
+    } else if (e.key === '%') {
+        percentage();
+    }
+});
+
 // Initialize display
 updateDisplay();
