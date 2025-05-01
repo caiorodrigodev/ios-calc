@@ -14,6 +14,18 @@ const clearButton = document.getElementById('clear-button');
 function updateDisplay() {
     resultElement.textContent = currentInput;
     
+    // Adjust font size based on number length
+    if (currentInput.length > 9) {
+        resultElement.classList.add('result-small');
+        resultElement.classList.remove('result-smaller');
+    } else if (currentInput.length > 12) {
+        resultElement.classList.add('result-smaller');
+        resultElement.classList.remove('result-small');
+    } else {
+        resultElement.classList.remove('result-small');
+        resultElement.classList.remove('result-smaller');
+    }
+    
     // Update history if there's an operation
     if (operation) {
         historyElement.textContent = `${previousInput} ${getOperatorSymbol(operation)}`;
