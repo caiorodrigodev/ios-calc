@@ -1,43 +1,23 @@
-/* Import Montserrat font from Google Fonts */
+/* Importando a fonte Montserrat do Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
 
-/* Basic structure styles */
+/* Aplicando Montserrat como fonte principal */
 body {
-    background-color: #f0f0f0;
     font-family: 'Montserrat', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
 }
 
-.calculator {
-    width: 250px;
-    border-radius: 10px;
-    overflow: hidden;
+.window {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
     transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .title-bar {
     background: linear-gradient(to bottom, #e8e8e8, #d1d1d1);
-    height: 20px;
-    padding: 5px;
-    display: flex;
-    align-items: center;
     border-bottom: 1px solid #b5b5b5;
-}
-
-.window-buttons {
-    display: flex;
-    gap: 5px;
-}
-
-.button-close, .button-minimize, .button-maximize {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .button-close {
@@ -52,112 +32,75 @@ body {
     background-color: #27c93f;
 }
 
-.display {
-    background-color: #222;
-    color: white;
-    padding: 10px;
-    text-align: right;
-}
-
-#result {
-    font-size: 2.5rem;
-    font-weight: 300;
-    line-height: 1.2;
-    margin-top: 5px;
-    transition: font-size 0.2s ease;
-    letter-spacing: -0.5px;
-    overflow: hidden;
-}
-
-.result-small {
-    font-size: 2rem !important;
-}
-
-.result-smaller {
-    font-size: 1.8rem !important;
-}
-
-#history {
-    font-size: 1rem;
-    color: #aaa;
-    height: 1.2rem;
-    overflow: hidden;
-}
-
-.buttons {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2px;
-    background-color: #111;
-    padding: 2px;
-}
-
-button {
-    border: none;
-    padding: 15px 10px;
-    border-radius: 50%;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    height: 50px;
-}
-
-.number {
-    background-color: rgb(42, 42, 44);
-    color: white;
-    font-size: 1.375rem;
-    font-weight: 400;
-}
-
-.number:hover {
-    background-color: rgba(42, 42, 44, 0.875);
-}
-
-.number:active {
-    background-color: rgba(42, 42, 44, 0.75);
-}
-
-.operator {
+.button-operator {
     background-color: rgb(255, 157, 57);
     color: white;
-    font-size: 1.5rem;
+    font-size: 1.5rem; /* Tamanho da fonte para operadores */
+    font-family: 'Montserrat', sans-serif;
     font-weight: 500;
 }
 
-.operator:hover {
+.button-operator:hover {
     background-color: rgba(255, 157, 57, 0.875);
 }
 
-.operator.active {
+.button-operator.active {
     background-color: rgba(255, 157, 57, 0.75);
 }
 
-.function {
+.button-function {
     background-color: rgb(92, 91, 96);
     color: white;
-    font-size: 1.25rem;
+    font-size: 1.25rem; /* Tamanho da fonte para botões de função */
+    font-family: 'Montserrat', sans-serif;
     font-weight: 400;
 }
 
-.function:hover {
+.button-function:hover {
     background-color: rgba(92, 91, 96, 0.875);
+    color: white;
 }
 
-.function:active {
+.button-function:active {
     background-color: rgba(92, 91, 96, 0.75);
+    color: white;
 }
 
-.zero {
-    grid-column: span 2;
-    text-align: center;
+.button-number {
+    background-color: rgb(42, 42, 44);
+    color: white;
+    font-size: 1.375rem; /* Tamanho da fonte para números */
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
 }
 
-/* Fade-in animation */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+.button-number:hover {
+    background-color: rgb(42, 42, 44, 0.875);
+    color: white;
 }
 
-.fade-in {
-    animation: fadeIn 0.5s ease-out forwards;
+.button-number:active {
+    background-color: rgb(42, 42, 44, 0.75);
+    color: white;
+}
+
+.display {
+    background-color: #0f0d0d;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Estilos para o display */
+#result {
+    font-size: 2.5rem; /* Tamanho da fonte para o resultado */
+    font-weight: 300; /* Fonte leve para números grandes */
+    line-height: 1.2; /* Espaçamento vertical */
+    transition: font-size 0.2s ease; /* Transição suave */
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: -0.5px; /* Ajuste de espaçamento para a Montserrat */
+}
+
+#history {
+    font-size: 1rem; /* Tamanho da fonte para o histórico */
+    color: #a0a0a0;
 }

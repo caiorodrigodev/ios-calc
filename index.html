@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body class="bg-gray-200 flex items-center justify-center min-h-screen">
-    <div class="calculator w-64 fade-in">
+    <div class="window w-64 fade-in">
         <!-- Title Bar -->
         <div class="title-bar flex items-center px-2 py-2">
             <div class="flex space-x-2 mr-2">
@@ -28,33 +28,33 @@
         <!-- Buttons -->
         <div class="grid grid-cols-4 gap-1 p-2 bg-stone-950">
             <!-- Row 1 -->
-            <button id="clear-button" class="function rounded-full h-14 text-sm">AC</button>
-            <button class="function rounded-full h-14">+/-</button>
-            <button class="function rounded-full h-14">%</button>
-            <button class="operator rounded-full h-14">÷</button>
+            <button id="clear-button" class="button-function rounded-full h-14 text-sm">AC</button>
+            <button onclick="toggleSign()" class="button-function rounded-full h-14">+/-</button>
+            <button onclick="percentage()" class="button-function rounded-full h-14">%</button>
+            <button onclick="operator('/')" class="button-operator rounded-full h-14">÷</button>
             
             <!-- Row 2 -->
-            <button class="number rounded-full h-14">7</button>
-            <button class="number rounded-full h-14">8</button>
-            <button class="number rounded-full h-14">9</button>
-            <button class="operator rounded-full h-14">×</button>
+            <button onclick="appendNumber('7')" class="button-number rounded-full h-14">7</button>
+            <button onclick="appendNumber('8')" class="button-number rounded-full h-14">8</button>
+            <button onclick="appendNumber('9')" class="button-number rounded-full h-14">9</button>
+            <button onclick="operator('*')" class="button-operator rounded-full h-14">×</button>
             
             <!-- Row 3 -->
-            <button class="number rounded-full h-14">4</button>
-            <button class="number rounded-full h-14">5</button>
-            <button class="number rounded-full h-14">6</button>
-            <button class="operator rounded-full h-14">−</button>
+            <button onclick="appendNumber('4')" class="button-number rounded-full h-14">4</button>
+            <button onclick="appendNumber('5')" class="button-number rounded-full h-14">5</button>
+            <button onclick="appendNumber('6')" class="button-number rounded-full h-14">6</button>
+            <button onclick="operator('-')" class="button-operator rounded-full h-14">−</button>
             
             <!-- Row 4 -->
-            <button class="number rounded-full h-14">1</button>
-            <button class="number rounded-full h-14">2</button>
-            <button class="number rounded-full h-14">3</button>
-            <button class="operator rounded-full h-14">+</button>
+            <button onclick="appendNumber('1')" class="button-number rounded-full h-14">1</button>
+            <button onclick="appendNumber('2')" class="button-number rounded-full h-14">2</button>
+            <button onclick="appendNumber('3')" class="button-number rounded-full h-14">3</button>
+            <button onclick="operator('+')" class="button-operator rounded-full h-14">+</button>
             
             <!-- Row 5 -->
-            <button class="number rounded-full h-14 col-span-2 text-center">0</button>
-            <button class="number rounded-full h-14">.</button>
-            <button class="operator rounded-full h-14">=</button>
+            <button onclick="appendNumber('0')" class="button-number rounded-full h-14 col-span-2 text-center">0</button>
+            <button onclick="appendNumber('.')" class="button-number rounded-full h-14">.</button>
+            <button onclick="calculate()" class="button-operator rounded-full h-14">=</button>
         </div>
     </div>
 
