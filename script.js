@@ -158,11 +158,40 @@ function toggleSign() {
     updateDisplay();
 }
 
-// FUNCTION WITH ERROR - This percentage function has an incorrect implementation
+// CORRECTED FUNCTION - Fixed percentage calculation
 function percentage() {
-    // Simple implementation that just divides by 100 regardless of context
-    // This doesn't handle the proper calculator behavior for operations
-    currentInput = (parseFloat(currentInput) / 100).toString();
+    const current = parseFloat(currentInput);
+    
+    if (isNaN(current)) return;
+    
+    // If there's no previous operation, simply divide by 100
+    if (!operation) {
+        currentInput = (current / 100).toString();
+    } 
+    // If there's a pending operation, calculate percentage based on the previous value
+    else {
+        const prev = parseFloat(previousInput);
+        
+        switch (operation) {
+            case '+':
+                // For addition, calculate X% of Y and add to Y
+                currentInput = ((prev * current) / 100).toString();
+                break;
+            case '-':
+                // For subtraction, calculate X% of Y and subtract from Y
+                currentInput = ((prev * current) / 100).toString();
+                break;
+            case '*':
+                // For multiplication, divide percentage by 100
+                currentInput = (current / 100).toString();
+                break;
+            case '/':
+                // For division, divide percentage by 100
+                currentInput = (current / 100).toString();
+                break;
+        }
+    }
+    
     updateDisplay();
 }
 
