@@ -71,6 +71,16 @@ document.querySelectorAll('.number').forEach(button => {
 
 // Function to handle operators
 function handleOperator(op) {
+    // Remove active class from all operator buttons
+    document.querySelectorAll('.operator').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Add active class to clicked operator (if using event.target)
+    if (event && event.target) {
+        event.target.classList.add('active');
+    }
+    
     // If there's already a pending operation, calculate first
     if (operation && !resetInput) {
         calculate();
@@ -106,6 +116,11 @@ function calculate() {
         default:
             return;
     }
+    
+    // Remove active class from all operator buttons
+    document.querySelectorAll('.operator').forEach(btn => {
+        btn.classList.remove('active');
+    });
     
     currentInput = result.toString();
     operation = null;
