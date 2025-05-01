@@ -82,15 +82,18 @@ function getOperatorSymbol(op) {
 }
 
 function appendNumber(number) {
+    // If user types dot, convert to comma
+    if (number === '.') number = ',';
+
     // Allow only one comma as decimal separator
-    if ((number === ',' || number === '.') && (currentInput.includes(',') || currentInput.includes('.'))) {
+    if (number === ',' && currentInput.includes(',')) {
         return;
     }
 
-    // If the user types dot, convert to comma
-    if (number === '.') number = ',';
-
-    if (currentInput === '0' || resetInput) {
+    // Prevent leading zeros
+    if (currentInput === '0' && number !== ',') {
+        currentInput = number;
+    } else if (resetInput) {
         currentInput = number;
         resetInput = false;
     } else {
