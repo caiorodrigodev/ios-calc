@@ -1,18 +1,18 @@
-// Variáveis para controlar o estado da calculadora
+// Variables to control calculator state
 let currentInput = '0';
 let previousInput = '0';
 let operation = null;
 let resetInput = false;
 
-// Elementos do DOM
+// DOM Elements
 const resultElement = document.getElementById('result');
 const historyElement = document.getElementById('history');
 
-// Função para atualizar o display
+// Function to update the display
 function updateDisplay() {
     resultElement.textContent = currentInput;
     
-    // Atualizar histórico se houver operação
+    // Update history if there's an operation
     if (operation) {
         historyElement.textContent = `${previousInput} ${getOperatorSymbol(operation)}`;
     } else {
@@ -20,7 +20,7 @@ function updateDisplay() {
     }
 }
 
-// Função para obter o símbolo do operador
+// Function to get the operator symbol
 function getOperatorSymbol(op) {
     switch(op) {
         case '+': return '+';
@@ -31,5 +31,29 @@ function getOperatorSymbol(op) {
     }
 }
 
-// Inicialização
+// Function to append a number to the input
+function appendNumber(number) {
+    if (currentInput === '0' || resetInput) {
+        currentInput = number;
+        resetInput = false;
+    } else {
+        currentInput += number;
+    }
+    
+    // Prevent multiple decimal points
+    if (number === '.' && currentInput.includes('.')) {
+        currentInput = currentInput.slice(0, -1);
+    }
+    
+    updateDisplay();
+}
+
+// Add event listeners to number buttons
+document.querySelectorAll('.number').forEach(button => {
+    button.addEventListener('click', () => {
+        appendNumber(button.textContent);
+    });
+});
+
+// Initialize display
 updateDisplay();
