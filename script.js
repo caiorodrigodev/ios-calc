@@ -13,9 +13,9 @@ clearButton.addEventListener('click', handleClear);
 
 function updateDisplay() {
     // Show comma as decimal separator to the user
-    resultElement.textContent = currentInput.replace('.', ',');
-
-    // Adjust font size based on the length of the number
+    resultElement.textContent = currentInput;
+    
+    // Adjusts the font size based on the length of the number
     if (currentInput.length > 9) {
         resultElement.classList.add('result-small');
         resultElement.classList.remove('result-smaller');
@@ -26,14 +26,15 @@ function updateDisplay() {
         resultElement.classList.remove('result-small');
         resultElement.classList.remove('result-smaller');
     }
-
+    
     if (operation) {
         // Also show comma in the history
-        historyElement.textContent = `${previousInput.replace('.', ',')} ${getOperatorSymbol(operation)}`;
+        historyElement.textContent = `${previousInput} ${getOperatorSymbol(operation)}`;
     } else {
         historyElement.textContent = '';
     }
-
+    
+    // Updates the text of the clear button
     updateClearButtonText();
 }
 
@@ -43,8 +44,10 @@ function updateClearButtonText() {
 
 function handleClear() {
     if (allClear) {
+        // AC - Clears everything
         clearAll();
     } else {
+        // C - Clears only the current entry
         clearEntry();
     }
 }
@@ -55,12 +58,12 @@ function clearAll() {
     operation = null;
     resetInput = false;
     allClear = true;
-
+    
     // Remove active class from all operator buttons
     document.querySelectorAll('.button-operator').forEach(btn => {
         btn.classList.remove('active');
     });
-
+    
     updateDisplay();
 }
 
@@ -82,25 +85,21 @@ function getOperatorSymbol(op) {
 }
 
 function appendNumber(number) {
-    // If user types dot, convert to comma
-    if (number === '.') number = ',';
-
-    // Allow only one comma as decimal separator
-    if (number === ',' && currentInput.includes(',')) {
-        return;
-    }
-
-    // Prevent leading zeros unless it's a decimal number
-    if (resetInput) {
-        currentInput = (number === ',' ? '0,' : number);
-        resetInput = false;
-    } else if (currentInput === '0' && number !== ',') {
+    if (currentInput === '0' || resetInput) {
         currentInput = number;
+        resetInput = false;
     } else {
         currentInput += number;
     }
-
+    
+    // Prevent multiple decimal points
+    if (number === ',' && currentInput.includes(',')) {
+        currentInput = currentInput.slice(0, -1);
+    }
+    
+    // Mudamos para "C" ao começar a digitar
     allClear = false;
+    
     updateDisplay();
 }
 
@@ -109,11 +108,16 @@ function operator(op) {
     document.querySelectorAll('.button-operator').forEach(btn => {
         btn.classList.remove('active');
     });
-
+    
+    // Add active class to clicked operator (se estiver usando event.target)
+    if (event && event.target) {
+        event.target.classList.add('active');
+    }
+    
     if (operation && !resetInput) {
         calculate();
     }
-
+    
     previousInput = currentInput;
     operation = op;
     resetInput = true;
@@ -121,13 +125,12 @@ function operator(op) {
 }
 
 function calculate() {
-    // Always convert comma to dot before calculation
-    const prev = parseFloat(previousInput.replace(',', '.'));
-    const current = parseFloat(currentInput.replace(',', '.'));
-
-    if (isNaN(prev) || isNaN(current)) return;
-
     let result;
+    const prev = parseFloat(previousInput);
+    const current = parseFloat(currentInput);
+    
+    if (isNaN(prev) || isNaN(current)) return;
+    
     switch (operation) {
         case '+':
             result = prev + current;
@@ -139,105 +142,82 @@ function calculate() {
             result = prev * current;
             break;
         case '/':
-            result = current === 0 ? 'Error' : prev / current;
+            result = prev / current;
             break;
         default:
             return;
     }
-
+    
     // Remove active class from all operator buttons
     document.querySelectorAll('.button-operator').forEach(btn => {
         btn.classList.remove('active');
     });
-
-    // If result is error, show as is. Otherwise, convert to string with comma
-    currentInput = result === 'Error' ? 'Error' : result.toString().replace('.', ',');
+    
+    currentInput = result.toString();
     operation = null;
     resetInput = true;
-    allClear = true;
+    allClear = true;  // Depois de calcular, voltamos para AC
     updateDisplay();
 }
 
 function toggleSign() {
-    if (currentInput === '0' || currentInput === 'Error') return;
-    let num = parseFloat(currentInput.replace(',', '.'));
-    num *= -1;
-    currentInput = num.toString().replace('.', ',');
+    currentInput = (parseFloat(currentInput) * -1).toString();
     updateDisplay();
 }
 
+// FUNÇÃO CORRIGIDA PARA PORCENTAGEM
 function percentage() {
-    const current = parseFloat(currentInput.replace(',', '.'));
-
+    const current = parseFloat(currentInput);
+    
     if (isNaN(current)) return;
-
+    
+    // Se não houver operação anterior, simplesmente divide por 100
     if (!operation) {
-        currentInput = (current / 100).toString().replace('.', ',');
-    } else {
-        const prev = parseFloat(previousInput.replace(',', '.'));
-
+        currentInput = (current / 100).toString();
+    } 
+    // Se houver uma operação pendente, calcule a porcentagem com base no valor anterior
+    else {
+        const prev = parseFloat(previousInput);
+        
         switch (operation) {
             case '+':
+                // Para adição, calculamos X% de Y e somamos a Y
+                currentInput = ((prev * current) / 100).toString();
+                break;
             case '-':
-                currentInput = ((prev * current) / 100).toString().replace('.', ',');
+                // Para subtração, calculamos X% de Y e subtraímos de Y
+                currentInput = ((prev * current) / 100).toString();
                 break;
             case '*':
+                // Para multiplicação, dividimos o percentual por 100
+                currentInput = (current / 100).toString();
+                break;
             case '/':
-                currentInput = (current / 100).toString().replace('.', ',');
+                // Para divisão, dividimos o percentual por 100
+                currentInput = (current / 100).toString();
                 break;
         }
     }
-
+    
     updateDisplay();
 }
 
 // Initialize display
 updateDisplay();
 
-// Keyboard support: accept both dot and comma as decimal separator
+// Add keyboard support
 document.addEventListener('keydown', (e) => {
-    // Ignore if focus is on an input field (to not interfere with form fields)
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-
-    if (e.key >= '0' && e.key <= '9') {
-        appendNumber(e.key);
-        e.preventDefault();
-    }
-    else if (e.key === '.' || e.key === ',') {
-        appendNumber(',');
-        e.preventDefault();
-    }
-    else if (e.key === '+') {
-        operator('+');
-        e.preventDefault();
-    }
-    else if (e.key === '-') {
-        operator('-');
-        e.preventDefault();
-    }
-    else if (e.key === '*') {
-        operator('*');
-        e.preventDefault();
-    }
-    else if (e.key === '/') {
-        operator('/');
-        e.preventDefault();
-    }
-    else if (e.key === 'Enter' || e.key === '=') {
-        calculate();
-        e.preventDefault();
-    }
-    else if (e.key === 'Escape') {
-        clearAll();
-        e.preventDefault();
-    }
+    if (e.key >= '0' && e.key <= '9') appendNumber(e.key);
+    else if (e.key === ',') appendNumber(',');
+    else if (e.key === '+') operator('+');
+    else if (e.key === '-') operator('-');
+    else if (e.key === '*') operator('*');
+    else if (e.key === '/') operator('/');
+    else if (e.key === 'Enter' || e.key === '=') calculate();
+    else if (e.key === 'Escape') clearAll();
     else if (e.key === 'Backspace' || e.key === 'Delete') {
         if (allClear) clearAll();
         else clearEntry();
-        e.preventDefault();
     }
-    else if (e.key === '%') {
-        percentage();
-        e.preventDefault();
-    }
+    else if (e.key === '%') percentage();
 });
