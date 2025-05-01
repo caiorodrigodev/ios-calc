@@ -125,6 +125,8 @@ function calculate() {
     currentInput = result.toString();
     operation = null;
     resetInput = true;
+    allClear = true;  // After calculation, return to AC
+    updateClearButtonText();
     updateDisplay();
 }
 
