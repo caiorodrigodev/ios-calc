@@ -12,7 +12,8 @@ const clearButton = document.getElementById('clear-button');
 clearButton.addEventListener('click', handleClear);
 
 function updateDisplay() {
-    resultElement.textContent = currentInput;
+    // Show comma as decimal separator to the user
+    resultElement.textContent = currentInput.replace('.', ',');
 
     // Adjust font size based on the length of the number
     if (currentInput.length > 9) {
@@ -27,12 +28,12 @@ function updateDisplay() {
     }
 
     if (operation) {
-        historyElement.textContent = `${previousInput} ${getOperatorSymbol(operation)}`;
+        // Also show comma in the history
+        historyElement.textContent = `${previousInput.replace('.', ',')} ${getOperatorSymbol(operation)}`;
     } else {
         historyElement.textContent = '';
     }
 
-    // Update the clear button text
     updateClearButtonText();
 }
 
@@ -42,10 +43,8 @@ function updateClearButtonText() {
 
 function handleClear() {
     if (allClear) {
-        // AC - Clear all
         clearAll();
     } else {
-        // C - Clear only current input
         clearEntry();
     }
 }
@@ -75,18 +74,22 @@ function clearEntry() {
 function getOperatorSymbol(op) {
     switch(op) {
         case '+': return '+';
-        case '-': return '−'; // Correct minus symbol
-        case '*': return '×'; // Correct multiplication symbol
-        case '/': return '÷'; // Correct division symbol
+        case '-': return '−';
+        case '*': return '×';
+        case '/': return '÷';
         default: return op;
     }
 }
 
 function appendNumber(number) {
-    // Prevent multiple decimals
-    if (number === '.' && currentInput.includes('.')) {
+    // Allow only one comma as decimal separator
+    if ((number === ',' || number === '.') && (currentInput.includes(',') || currentInput.includes('.'))) {
         return;
     }
+
+    // If the user types dot, convert to comma
+    if (number === '.') number = ',';
+
     if (currentInput === '0' || resetInput) {
         currentInput = number;
         resetInput = false;
@@ -94,9 +97,7 @@ function appendNumber(number) {
         currentInput += number;
     }
 
-    // Switch to "C" when typing starts
     allClear = false;
-
     updateDisplay();
 }
 
@@ -105,8 +106,6 @@ function operator(op) {
     document.querySelectorAll('.button-operator').forEach(btn => {
         btn.classList.remove('active');
     });
-
-    // Optionally, set the active class for the clicked operator if using event delegation
 
     if (operation && !resetInput) {
         calculate();
@@ -119,8 +118,9 @@ function operator(op) {
 }
 
 function calculate() {
-    const prev = parseFloat(previousInput);
-    const current = parseFloat(currentInput);
+    // Always convert comma to dot before calculation
+    const prev = parseFloat(previousInput.replace(',', '.'));
+    const current = parseFloat(currentInput.replace(',', '.'));
 
     if (isNaN(prev) || isNaN(current)) return;
 
@@ -136,7 +136,6 @@ function calculate() {
             result = prev * current;
             break;
         case '/':
-            // Handle division by zero
             result = current === 0 ? 'Error' : prev / current;
             break;
         default:
@@ -148,42 +147,40 @@ function calculate() {
         btn.classList.remove('active');
     });
 
-    currentInput = result.toString();
+    // If result is error, show as is. Otherwise, convert to string with comma
+    currentInput = result === 'Error' ? 'Error' : result.toString().replace('.', ',');
     operation = null;
     resetInput = true;
-    allClear = true;  // After calculation, revert to AC
+    allClear = true;
     updateDisplay();
 }
 
 function toggleSign() {
-    currentInput = (parseFloat(currentInput) * -1).toString();
+    if (currentInput === '0' || currentInput === 'Error') return;
+    let num = parseFloat(currentInput.replace(',', '.'));
+    num *= -1;
+    currentInput = num.toString().replace('.', ',');
     updateDisplay();
 }
 
-// PERCENTAGE FUNCTION (corrected for context)
 function percentage() {
-    const current = parseFloat(currentInput);
+    const current = parseFloat(currentInput.replace(',', '.'));
 
     if (isNaN(current)) return;
 
-    // If there's no previous operation, just divide by 100
     if (!operation) {
-        currentInput = (current / 100).toString();
-    } 
-    // If there is a pending operation, calculate the percentage based on the previous value
-    else {
-        const prev = parseFloat(previousInput);
+        currentInput = (current / 100).toString().replace('.', ',');
+    } else {
+        const prev = parseFloat(previousInput.replace(',', '.'));
 
         switch (operation) {
             case '+':
             case '-':
-                // For addition and subtraction, calculate X% of Y
-                currentInput = ((prev * current) / 100).toString();
+                currentInput = ((prev * current) / 100).toString().replace('.', ',');
                 break;
             case '*':
             case '/':
-                // For multiplication/division, divide the percentage by 100
-                currentInput = (current / 100).toString();
+                currentInput = (current / 100).toString().replace('.', ',');
                 break;
         }
     }
@@ -194,10 +191,10 @@ function percentage() {
 // Initialize display
 updateDisplay();
 
-// Add keyboard support
+// Keyboard support: accept both dot and comma as decimal separator
 document.addEventListener('keydown', (e) => {
     if (e.key >= '0' && e.key <= '9') appendNumber(e.key);
-    else if (e.key === '.') appendNumber('.');
+    else if (e.key === '.' || e.key === ',') appendNumber(',');
     else if (e.key === '+') operator('+');
     else if (e.key === '-') operator('-');
     else if (e.key === '*') operator('*');
