@@ -4,57 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iOS Style Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-    <div class="calculator fade-in">
+<body class="bg-gray-200 flex items-center justify-center min-h-screen">
+    <div class="calculator w-64 fade-in">
         <!-- Title Bar -->
-        <div class="title-bar">
-            <div class="window-buttons">
-                <div class="button-close"></div>
-                <div class="button-minimize"></div>
-                <div class="button-maximize"></div>
+        <div class="title-bar flex items-center px-2 py-2">
+            <div class="flex space-x-2 mr-2">
+                <div class="button-close w-3 h-3 rounded-full"></div>
+                <div class="button-minimize w-3 h-3 rounded-full"></div>
+                <div class="button-maximize w-3 h-3 rounded-full"></div>
             </div>
         </div>
         
         <!-- Display -->
-        <div class="display">
-            <div id="history"></div>
-            <div id="result">0</div>
+        <div class="display p-4 text-right">
+            <div id="history" class="text-gray-400 text-sm h-5 overflow-hidden"></div>
+            <div id="result" class="text-3xl font-light mt-1 overflow-hidden">0</div>
         </div>
         
         <!-- Buttons -->
-        <div class="buttons">
+        <div class="grid grid-cols-4 gap-1 p-2 bg-stone-950">
             <!-- Row 1 -->
-            <button id="clear-button">AC</button>
-            <button class="function">+/-</button>
-            <button class="function">%</button>
-            <button class="operator">÷</button>
+            <button id="clear-button" class="function rounded-full h-14 text-sm">AC</button>
+            <button class="function rounded-full h-14">+/-</button>
+            <button class="function rounded-full h-14">%</button>
+            <button class="operator rounded-full h-14">÷</button>
             
             <!-- Row 2 -->
-            <button class="number">7</button>
-            <button class="number">8</button>
-            <button class="number">9</button>
-            <button class="operator">×</button>
+            <button class="number rounded-full h-14">7</button>
+            <button class="number rounded-full h-14">8</button>
+            <button class="number rounded-full h-14">9</button>
+            <button class="operator rounded-full h-14">×</button>
             
             <!-- Row 3 -->
-            <button class="number">4</button>
-            <button class="number">5</button>
-            <button class="number">6</button>
-            <button class="operator">−</button>
+            <button class="number rounded-full h-14">4</button>
+            <button class="number rounded-full h-14">5</button>
+            <button class="number rounded-full h-14">6</button>
+            <button class="operator rounded-full h-14">−</button>
             
             <!-- Row 4 -->
-            <button class="number">1</button>
-            <button class="number">2</button>
-            <button class="number">3</button>
-            <button class="operator">+</button>
+            <button class="number rounded-full h-14">1</button>
+            <button class="number rounded-full h-14">2</button>
+            <button class="number rounded-full h-14">3</button>
+            <button class="operator rounded-full h-14">+</button>
             
             <!-- Row 5 -->
-            <button class="number zero">0</button>
-            <button class="number">.</button>
-            <button class="operator">=</button>
+            <button class="number rounded-full h-14 col-span-2 text-center">0</button>
+            <button class="number rounded-full h-14">.</button>
+            <button class="operator rounded-full h-14">=</button>
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
