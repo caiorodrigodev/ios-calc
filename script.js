@@ -90,12 +90,12 @@ function appendNumber(number) {
         return;
     }
 
-    // Prevent leading zeros
-    if (currentInput === '0' && number !== ',') {
-        currentInput = number;
-    } else if (resetInput) {
-        currentInput = number;
+    // Prevent leading zeros unless it's a decimal number
+    if (resetInput) {
+        currentInput = (number === ',' ? '0,' : number);
         resetInput = false;
+    } else if (currentInput === '0' && number !== ',') {
+        currentInput = number;
     } else {
         currentInput += number;
     }
@@ -196,17 +196,48 @@ updateDisplay();
 
 // Keyboard support: accept both dot and comma as decimal separator
 document.addEventListener('keydown', (e) => {
-    if (e.key >= '0' && e.key <= '9') appendNumber(e.key);
-    else if (e.key === '.' || e.key === ',') appendNumber(',');
-    else if (e.key === '+') operator('+');
-    else if (e.key === '-') operator('-');
-    else if (e.key === '*') operator('*');
-    else if (e.key === '/') operator('/');
-    else if (e.key === 'Enter' || e.key === '=') calculate();
-    else if (e.key === 'Escape') clearAll();
+    // Ignore if focus is on an input field (to not interfere with form fields)
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+    if (e.key >= '0' && e.key <= '9') {
+        appendNumber(e.key);
+        e.preventDefault();
+    }
+    else if (e.key === '.' || e.key === ',') {
+        appendNumber(',');
+        e.preventDefault();
+    }
+    else if (e.key === '+') {
+        operator('+');
+        e.preventDefault();
+    }
+    else if (e.key === '-') {
+        operator('-');
+        e.preventDefault();
+    }
+    else if (e.key === '*') {
+        operator('*');
+        e.preventDefault();
+    }
+    else if (e.key === '/') {
+        operator('/');
+        e.preventDefault();
+    }
+    else if (e.key === 'Enter' || e.key === '=') {
+        calculate();
+        e.preventDefault();
+    }
+    else if (e.key === 'Escape') {
+        clearAll();
+        e.preventDefault();
+    }
     else if (e.key === 'Backspace' || e.key === 'Delete') {
         if (allClear) clearAll();
         else clearEntry();
+        e.preventDefault();
     }
-    else if (e.key === '%') percentage();
+    else if (e.key === '%') {
+        percentage();
+        e.preventDefault();
+    }
 });
