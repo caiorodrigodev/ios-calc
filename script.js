@@ -20,9 +20,14 @@ clearButton.addEventListener('click', handleClear);
 function formatNumberForDisplay(number) {
     // Check for error messages
     if (typeof number === 'string' && 
-        (number === 'Indefinido' || number === 'Indeterminate' || 
-         number === 'Error' || number === 'Overflow')) {
+        (number === 'Indefinido' || number === 'Indeterminado' || 
+         number === 'Erro' || number === 'Overflow')) {
         return number;
+    }
+    
+    // Check for scientific notation (e.g., 1e10)
+    if (typeof number === 'string' && number.includes('e')) {
+        return number.replace('e', 'e');
     }
     
     // Check if the number has a decimal part
@@ -118,8 +123,8 @@ function getOperatorSymbol(op) {
 
 function appendNumber(number) {
     // Don't allow input if we're showing an error message
-    if (currentInput === 'Undefined' || currentInput === 'Indeterminate' || 
-        currentInput === 'Error' || currentInput === 'Overflow') {
+    if (currentInput === 'Indefinido' || currentInput === 'Indeterminado' || 
+        currentInput === 'Erro' || currentInput === 'Overflow') {
         clearAll();
     }
     
@@ -148,8 +153,8 @@ function appendNumber(number) {
 
 function operator(op) {
     // Don't allow operations if we're showing an error message
-    if (currentInput === 'Undefined' || currentInput === 'Indeterminate' || 
-        currentInput === 'Error' || currentInput === 'Overflow') {
+    if (currentInput === 'Indefinido' || currentInput === 'Indeterminado' || 
+        currentInput === 'Erro' || currentInput === 'Overflow') {
         clearAll();
         return;
     }
@@ -184,7 +189,7 @@ function calculate() {
     // Handle division by zero
     if (operation === '/' && current === 0) {
         if (prev === 0) {
-            currentInput = 'Indeterminate'; // 0/0 is indeterminate
+            currentInput = 'Indeterminado'; // 0/0 is indeterminate
         } else {
             currentInput = 'Indefinido'; // x/0 is undefined
         }
@@ -214,7 +219,7 @@ function calculate() {
     
     // Check for other calculation errors or overflows
     if (!isFinite(result)) {
-        currentInput = 'Error';
+        currentInput = 'Erro';
         operation = null;
         resetInput = true;
         allClear = true;
@@ -234,8 +239,14 @@ function calculate() {
         result = 0;
     }
     
-    // Handle result formatting
-    currentInput = result.toString();
+    // Use scientific notation for very large numbers (10 billion or more)
+    if (Math.abs(result) >= 1e10) {
+        // Convert to scientific notation (e.g., 1e10)
+        currentInput = result.toExponential(0);
+    } else {
+        // Normal formatting
+        currentInput = result.toString();
+    }
     
     operation = null;
     resetInput = true;
@@ -245,8 +256,8 @@ function calculate() {
 
 function toggleSign() {
     // Don't toggle sign if we're showing an error message
-    if (currentInput === 'Indefinido' || currentInput === 'Indeterminate' || 
-        currentInput === 'Error' || currentInput === 'Overflow') {
+    if (currentInput === 'Indefinido' || currentInput === 'Indeterminado' || 
+        currentInput === 'Erro' || currentInput === 'Overflow') {
         return;
     }
     
@@ -257,8 +268,8 @@ function toggleSign() {
 // Percentage function
 function percentage() {
     // Don't calculate percentage if we're showing an error message
-    if (currentInput === 'Indefinido' || currentInput === 'Indeterminate' || 
-        currentInput === 'Error' || currentInput === 'Overflow') {
+    if (currentInput === 'Indefinido' || currentInput === 'Indeterminado' || 
+        currentInput === 'Erro' || currentInput === 'Overflow') {
         return;
     }
     
