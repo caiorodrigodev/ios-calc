@@ -119,7 +119,7 @@ body {
     }
 
     .window {
-        width: 100vw; /* Full viewport width */
+        width: 100vw !important; /* Override Tailwind w-64 */
         min-height: 100dvh; /* Full viewport height, accounting for dynamic bars */
         height: auto; /* Allow height to adjust */
         box-shadow: none; /* Remove shadow */
@@ -127,12 +127,12 @@ body {
         position: fixed; /* Ensure it stays in place */
         top: 0;
         left: 0;
-        /* Temporary border for debugging */
-        border: 2px solid red; /* Remove after confirming media query works */
+        display: flex;
+        flex-direction: column;
     }
 
-    .title-bar {
-        display: none; /* Hide title bar on mobile */
+    .window .title-bar {
+        display: none !important; /* Hide title bar on mobile with higher specificity */
     }
 
     .display {
@@ -145,5 +145,14 @@ body {
     .grid {
         box-sizing: border-box;
         height: auto; /* Allow grid to adjust */
+        flex-grow: 0; /* Prevent grid from growing too much */
+    }
+
+    /* Adjust button sizes for better mobile experience */
+    .button-number,
+    .button-operator,
+    .button-function {
+        height: 3.5rem; /* Slightly smaller buttons for mobile */
+        font-size: 1.25rem; /* Adjust font size */
     }
 }

@@ -16,6 +16,16 @@ const clearButton = document.getElementById('clear-button');
 // Initialize the clear button and add event
 clearButton.addEventListener('click', handleClear);
 
+// Prevent zoom on iOS devices
+document.addEventListener('gesturestart', function (e) {
+    e.preventDefault();
+});
+document.addEventListener('touchmove', function (e) {
+    if (e.scale !== 1) {
+        e.preventDefault();
+    }
+}, { passive: false });
+
 // Format number with thousand separators and comma as decimal separator for display
 function formatNumberForDisplay(number) {
     // Check for error messages

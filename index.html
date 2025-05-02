@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
     <head>
         <meta charset="UTF-8" />
+        <!-- Ensure viewport settings are compatible with iOS and prevent zoom -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <title>iOS Calculator</title>
         <script src="https://cdn.tailwindcss.com"></script>
@@ -23,9 +23,7 @@
 
         <link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
         <meta name="apple-mobile-web-app-title" content="Calculator" />
-        
     </head>
-
     <body class="bg-gray-200 flex items-center justify-center min-h-screen">
         <div class="window w-64 fade-in">
             <!-- Title Bar -->
@@ -116,7 +114,17 @@
             </div>
         </div>
 
+        <!-- Inline script to prevent zoom on iOS -->
+        <script>
+            document.addEventListener('gesturestart', function (e) {
+                e.preventDefault();
+            });
+            document.addEventListener('touchmove', function (e) {
+                if (e.scale !== 1) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        </script>
         <script src="script.js"></script>
     </body>
-
 </html>
