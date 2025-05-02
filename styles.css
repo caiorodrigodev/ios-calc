@@ -4,6 +4,9 @@
 /* Applying Montserrat as the primary font */
 body {
     font-family: 'Montserrat', sans-serif;
+    /* Prevent zoom on touch devices */
+    touch-action: manipulation;
+    -webkit-touch-callout: none; /* Disable iOS-specific touch behaviors */
 }
 
 .window {
@@ -35,8 +38,7 @@ body {
 .button-operator {
     background-color: rgb(255, 157, 57);
     color: white;
-    font-size: 1.5rem;
-    /* Font size for operators */
+    font-size: 1.5rem; /* Font size for operators */
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;
 }
@@ -52,8 +54,7 @@ body {
 .button-function {
     background-color: rgb(92, 91, 96);
     color: white;
-    font-size: 1.25rem;
-    /* Font size for function buttons */
+    font-size: 1.25rem; /* Font size for function buttons */
     font-family: 'Montserrat', sans-serif;
     font-weight: 400;
 }
@@ -71,8 +72,7 @@ body {
 .button-number {
     background-color: rgb(42, 42, 44);
     color: white;
-    font-size: 1.375rem;
-    /* Font size for number buttons */
+    font-size: 1.375rem; /* Font size for number buttons */
     font-family: 'Montserrat', sans-serif;
     font-weight: 400;
 }
@@ -95,60 +95,55 @@ body {
 
 /* Styles for the display */
 #result {
-    font-size: 2.5rem;
-    /* Font size for the result */
-    font-weight: 300;
-    /* Light font weight for large numbers */
-    line-height: 1.2;
-    /* Vertical spacing */
-    transition: font-size 0.2s ease;
-    /* Smooth transition */
+    font-size: 2.5rem; /* Font size for the result */
+    font-weight: 300; /* Light font weight for large numbers */
+    line-height: 1.2; /* Vertical spacing */
+    transition: font-size 0.2s ease; /* Smooth transition */
     font-family: 'Montserrat', sans-serif;
-    letter-spacing: -0.5px;
-    /* Spacing adjustment for Montserrat */
+    letter-spacing: -0.5px; /* Spacing adjustment for Montserrat */
 }
 
 #history {
-    font-size: 1rem;
-    /* Font size for history */
+    font-size: 1rem; /* Font size for history */
     color: #a0a0a0;
-}
-
-/* Prevent zoom on touch devices */
-body {
-    touch-action: manipulation;
-    /* Prevents double-tap zoom */
 }
 
 /* Media query for mobile devices (tablets and phones) */
 @media (max-width: 768px) {
     body {
-        background: none;
-        /* Remove gray background */
-        display: block;
-        /* Remove flex centering */
+        background: none; /* Remove gray background */
+        display: block; /* Remove flex centering */
+        margin: 0; /* Remove default margins */
+        padding: 0; /* Remove default padding */
+        overflow: hidden; /* Prevent scrolling */
     }
 
     .window {
-        width: 100vw;
-        /* Full viewport width */
-        height: 100vh;
-        /* Full viewport height */
-        box-shadow: none;
-        /* Remove shadow */
-        border-radius: 0;
-        /* Remove border radius */
+        width: 100vw; /* Full viewport width */
+        min-height: 100dvh; /* Full viewport height, accounting for dynamic bars */
+        height: auto; /* Allow height to adjust */
+        box-shadow: none; /* Remove shadow */
+        border-radius: 0; /* Remove border radius */
+        position: fixed; /* Ensure it stays in place */
+        top: 0;
+        left: 0;
+        /* Temporary border for debugging */
+        border: 2px solid red; /* Remove after confirming media query works */
     }
 
     .title-bar {
-        display: none;
-        /* Hide title bar on mobile */
+        display: none; /* Hide title bar on mobile */
     }
 
     .display {
-        flex-grow: 1;
-        /* Allow display to grow */
-        padding: 1rem;
-        /* Adjust padding for mobile */
+        flex-grow: 1; /* Allow display to grow */
+        padding: 1rem; /* Adjust padding for mobile */
+        box-sizing: border-box; /* Ensure padding is included in dimensions */
+    }
+
+    /* Ensure buttons remain responsive */
+    .grid {
+        box-sizing: border-box;
+        height: auto; /* Allow grid to adjust */
     }
 }
