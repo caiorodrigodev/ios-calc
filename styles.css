@@ -146,13 +146,21 @@ body {
         box-sizing: border-box;
         height: auto; /* Allow grid to adjust */
         flex-grow: 0; /* Prevent grid from growing too much */
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); /* Ensure equal column widths */
     }
 
-    /* Adjust button sizes for better mobile experience */
+    /* Adjust button sizes to be circular with minimum size */
     .button-number,
     .button-operator,
     .button-function {
-        height: 3.5rem; /* Slightly smaller buttons for mobile */
-        font-size: 1.25rem; /* Adjust font size */
+        min-width: 3.5rem; /* Minimum width to prevent shrinking */
+        min-height: 3.5rem; /* Minimum height to match width */
+        font-size: clamp(1rem, 4vw, 1.5rem); /* Responsive font size */
+    }
+
+    /* Specific style for the "0" button (col-span-2) to make it a pill shape */
+    .button-number.col-span-2 {
+        border-radius: 1.75rem; /* Half of height for pill shape */
     }
 }

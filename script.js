@@ -26,6 +26,43 @@ document.addEventListener('touchmove', function (e) {
     }
 }, { passive: false });
 
+// Function to make buttons circular by setting height equal to width with minimum size
+function makeButtonsCircular() {
+    const buttons = document.querySelectorAll('.button-number, .button-operator, .button-function, .button-number.col-span-2');
+    const minSize = 3.5 * parseFloat(getComputedStyle(document.documentElement).fontSize); // Convert 3.5rem to pixels
+    let referenceHeight = minSize; // Default to minimum size
+
+    // Find the height of the first regular button to use as reference
+    const regularButtons = document.querySelectorAll('.button-number:not(.col-span-2), .button-operator, .button-function');
+    if (regularButtons.length > 0) {
+        const firstRegularButton = regularButtons[0];
+        const width = firstRegularButton.offsetWidth;
+        referenceHeight = Math.max(width, minSize); // Use the height of regular buttons
+    }
+
+    buttons.forEach(button => {
+        const width = button.offsetWidth;
+        let height = referenceHeight; // Use the reference height for all buttons
+
+        // Ensure minimum size
+        height = Math.max(height, minSize);
+
+        // Apply height
+        button.style.height = `${height}px`;
+
+        // Adjust border-radius for the "0" button to maintain pill shape
+        if (button.classList.contains('col-span-2')) {
+            button.style.borderRadius = `${height / 2}px`; // Half of height for pill shape
+        } else {
+            button.style.borderRadius = '50%'; // Circular for other buttons
+        }
+    });
+}
+
+// Run on load and on window resize
+window.addEventListener('load', makeButtonsCircular);
+window.addEventListener('resize', makeButtonsCircular);
+
 // Format number with thousand separators and comma as decimal separator for display
 function formatNumberForDisplay(number) {
     // Check for error messages
