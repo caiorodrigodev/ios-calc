@@ -1,7 +1,7 @@
-/* Importando a fonte Montserrat do Google Fonts */
+/* Importing Montserrat font from Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
 
-/* Aplicando Montserrat como fonte principal */
+/* Applying Montserrat as the primary font */
 body {
     font-family: 'Montserrat', sans-serif;
 }
@@ -35,7 +35,8 @@ body {
 .button-operator {
     background-color: rgb(255, 157, 57);
     color: white;
-    font-size: 1.5rem; /* Tamanho da fonte para operadores */
+    font-size: 1.5rem;
+    /* Font size for operators */
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;
 }
@@ -51,7 +52,8 @@ body {
 .button-function {
     background-color: rgb(92, 91, 96);
     color: white;
-    font-size: 1.25rem; /* Tamanho da fonte para botões de função */
+    font-size: 1.25rem;
+    /* Font size for function buttons */
     font-family: 'Montserrat', sans-serif;
     font-weight: 400;
 }
@@ -69,7 +71,8 @@ body {
 .button-number {
     background-color: rgb(42, 42, 44);
     color: white;
-    font-size: 1.375rem; /* Tamanho da fonte para números */
+    font-size: 1.375rem;
+    /* Font size for number buttons */
     font-family: 'Montserrat', sans-serif;
     font-weight: 400;
 }
@@ -90,17 +93,62 @@ body {
     font-family: 'Montserrat', sans-serif;
 }
 
-/* Estilos para o display */
+/* Styles for the display */
 #result {
-    font-size: 2.5rem; /* Tamanho da fonte para o resultado */
-    font-weight: 300; /* Fonte leve para números grandes */
-    line-height: 1.2; /* Espaçamento vertical */
-    transition: font-size 0.2s ease; /* Transição suave */
+    font-size: 2.5rem;
+    /* Font size for the result */
+    font-weight: 300;
+    /* Light font weight for large numbers */
+    line-height: 1.2;
+    /* Vertical spacing */
+    transition: font-size 0.2s ease;
+    /* Smooth transition */
     font-family: 'Montserrat', sans-serif;
-    letter-spacing: -0.5px; /* Ajuste de espaçamento para a Montserrat */
+    letter-spacing: -0.5px;
+    /* Spacing adjustment for Montserrat */
 }
 
 #history {
-    font-size: 1rem; /* Tamanho da fonte para o histórico */
+    font-size: 1rem;
+    /* Font size for history */
     color: #a0a0a0;
+}
+
+/* Prevent zoom on touch devices */
+body {
+    touch-action: manipulation;
+    /* Prevents double-tap zoom */
+}
+
+/* Media query for mobile devices (tablets and phones) */
+@media (max-width: 768px) {
+    body {
+        background: none;
+        /* Remove gray background */
+        display: block;
+        /* Remove flex centering */
+    }
+
+    .window {
+        width: 100vw;
+        /* Full viewport width */
+        height: 100vh;
+        /* Full viewport height */
+        box-shadow: none;
+        /* Remove shadow */
+        border-radius: 0;
+        /* Remove border radius */
+    }
+
+    .title-bar {
+        display: none;
+        /* Hide title bar on mobile */
+    }
+
+    .display {
+        flex-grow: 1;
+        /* Allow display to grow */
+        padding: 1rem;
+        /* Adjust padding for mobile */
+    }
 }
