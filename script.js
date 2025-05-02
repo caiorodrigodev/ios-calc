@@ -18,19 +18,26 @@ clearButton.addEventListener('click', handleClear);
 
 // Format number with thousand separators and comma as decimal separator for display
 function formatNumberForDisplay(number) {
+    // Check for error messages
+    if (typeof number === 'string' && 
+        (number === 'Indefinido' || number === 'Indeterminate' || 
+         number === 'Error' || number === 'Overflow')) {
+        return number;
+    }
+    
     // Check if the number has a decimal part
-    if (number.includes('.')) {
-        const parts = number.split('.');
+    if (String(number).includes(INTERNAL_DECIMAL_SEPARATOR)) {
+        const parts = String(number).split(INTERNAL_DECIMAL_SEPARATOR);
         // Format the integer part with thousand separators
-        const integerPart = parseFloat(parts[0]).toLocaleString('pt-BR', {
+        const integerPart = parseFloat(parts[0]).toLocaleString(LOCALE, {
             useGrouping: true,
             maximumFractionDigits: 0
         });
         // Return integer part with decimal part using comma
-        return `${integerPart},${parts[1]}`;
+        return `${integerPart}${DECIMAL_SEPARATOR}${parts[1]}`;
     } else {
         // Format integer with thousand separators
-        return parseFloat(number).toLocaleString('pt-BR', {
+        return parseFloat(number).toLocaleString(LOCALE, {
             useGrouping: true,
             maximumFractionDigits: 0
         });
@@ -110,6 +117,12 @@ function getOperatorSymbol(op) {
 }
 
 function appendNumber(number) {
+    // Don't allow input if we're showing an error message
+    if (currentInput === 'Undefined' || currentInput === 'Indeterminate' || 
+        currentInput === 'Error' || currentInput === 'Overflow') {
+        clearAll();
+    }
+    
     // Convert comma to dot for internal calculations
     if (number === ',') {
         number = '.';
@@ -134,6 +147,13 @@ function appendNumber(number) {
 }
 
 function operator(op) {
+    // Don't allow operations if we're showing an error message
+    if (currentInput === 'Undefined' || currentInput === 'Indeterminate' || 
+        currentInput === 'Error' || currentInput === 'Overflow') {
+        clearAll();
+        return;
+    }
+    
     // Remove active class from all operator buttons
     document.querySelectorAll('.button-operator').forEach(btn => {
         btn.classList.remove('active');
@@ -161,6 +181,20 @@ function calculate() {
     
     if (isNaN(prev) || isNaN(current)) return;
     
+    // Handle division by zero
+    if (operation === '/' && current === 0) {
+        if (prev === 0) {
+            currentInput = 'Indeterminate'; // 0/0 is indeterminate
+        } else {
+            currentInput = 'Indefinido'; // x/0 is undefined
+        }
+        operation = null;
+        resetInput = true;
+        allClear = true;
+        updateDisplay();
+        return;
+    }
+    
     switch (operation) {
         case '+':
             result = prev + current;
@@ -176,6 +210,16 @@ function calculate() {
             break;
         default:
             return;
+    }
+    
+    // Check for other calculation errors or overflows
+    if (!isFinite(result)) {
+        currentInput = 'Error';
+        operation = null;
+        resetInput = true;
+        allClear = true;
+        updateDisplay();
+        return;
     }
     
     // Remove active class from all operator buttons
@@ -200,12 +244,24 @@ function calculate() {
 }
 
 function toggleSign() {
+    // Don't toggle sign if we're showing an error message
+    if (currentInput === 'Indefinido' || currentInput === 'Indeterminate' || 
+        currentInput === 'Error' || currentInput === 'Overflow') {
+        return;
+    }
+    
     currentInput = (parseFloat(currentInput) * -1).toString();
     updateDisplay();
 }
 
-// FIXED FUNCTION FOR PERCENTAGE
+// Percentage function
 function percentage() {
+    // Don't calculate percentage if we're showing an error message
+    if (currentInput === 'Indefinido' || currentInput === 'Indeterminate' || 
+        currentInput === 'Error' || currentInput === 'Overflow') {
+        return;
+    }
+    
     const current = parseFloat(currentInput);
     
     if (isNaN(current)) return;
