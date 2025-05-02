@@ -4,17 +4,44 @@ let operation = null;
 let resetInput = false;
 let allClear = true;
 
+// Set the locale for Brazil formatting
+const LOCALE = 'pt-BR';
+const DECIMAL_SEPARATOR = ',';
+const INTERNAL_DECIMAL_SEPARATOR = '.';
+
 const resultElement = document.getElementById('result');
 const historyElement = document.getElementById('history');
 const clearButton = document.getElementById('clear-button');
 
-// Inicializar o botão de limpar e adicionar o evento
+// Initialize the clear button and add event
 clearButton.addEventListener('click', handleClear);
 
+// Format number with thousand separators and comma as decimal separator for display
+function formatNumberForDisplay(number) {
+    // Check if the number has a decimal part
+    if (number.includes('.')) {
+        const parts = number.split('.');
+        // Format the integer part with thousand separators
+        const integerPart = parseFloat(parts[0]).toLocaleString('pt-BR', {
+            useGrouping: true,
+            maximumFractionDigits: 0
+        });
+        // Return integer part with decimal part using comma
+        return `${integerPart},${parts[1]}`;
+    } else {
+        // Format integer with thousand separators
+        return parseFloat(number).toLocaleString('pt-BR', {
+            useGrouping: true,
+            maximumFractionDigits: 0
+        });
+    }
+}
+
 function updateDisplay() {
-    resultElement.textContent = currentInput;
+    // Format the number for display with thousand separators
+    resultElement.textContent = formatNumberForDisplay(currentInput);
     
-    // Ajusta o tamanho da fonte baseado no comprimento do número
+    // Adjust font size based on number length
     if (currentInput.length > 9) {
         resultElement.classList.add('result-small');
         resultElement.classList.remove('result-smaller');
@@ -27,12 +54,12 @@ function updateDisplay() {
     }
     
     if (operation) {
-        historyElement.textContent = `${previousInput} ${getOperatorSymbol(operation)}`;
+        historyElement.textContent = `${formatNumberForDisplay(previousInput)} ${getOperatorSymbol(operation)}`;
     } else {
         historyElement.textContent = '';
     }
     
-    // Atualiza o texto do botão de limpar
+    // Update clear button text
     updateClearButtonText();
 }
 
@@ -42,10 +69,10 @@ function updateClearButtonText() {
 
 function handleClear() {
     if (allClear) {
-        // AC - Limpa tudo
+        // AC - Clear everything
         clearAll();
     } else {
-        // C - Limpa apenas a entrada atual
+        // C - Clear only current entry
         clearEntry();
     }
 }
@@ -83,6 +110,11 @@ function getOperatorSymbol(op) {
 }
 
 function appendNumber(number) {
+    // Convert comma to dot for internal calculations
+    if (number === ',') {
+        number = '.';
+    }
+    
     if (currentInput === '0' || resetInput) {
         currentInput = number;
         resetInput = false;
@@ -91,11 +123,11 @@ function appendNumber(number) {
     }
     
     // Prevent multiple decimal points
-    if (number === '.' && currentInput.includes('.')) {
+    if (number === '.' && currentInput.split('.').length > 2) {
         currentInput = currentInput.slice(0, -1);
     }
     
-    // Mudamos para "C" ao começar a digitar
+    // Change to "C" when starting to type
     allClear = false;
     
     updateDisplay();
@@ -107,7 +139,7 @@ function operator(op) {
         btn.classList.remove('active');
     });
     
-    // Add active class to clicked operator (se estiver usando event.target)
+    // Add active class to clicked operator (if using event.target)
     if (event && event.target) {
         event.target.classList.add('active');
     }
@@ -151,10 +183,19 @@ function calculate() {
         btn.classList.remove('active');
     });
     
+    // Convert to string with proper precision
+    // Avoid scientific notation and limit to reasonable decimal places
+    if (Math.abs(result) < 1e-10) {
+        // Handle very small numbers close to zero
+        result = 0;
+    }
+    
+    // Handle result formatting
     currentInput = result.toString();
+    
     operation = null;
     resetInput = true;
-    allClear = true;  // Depois de calcular, voltamos para AC
+    allClear = true;  // After calculation, go back to AC
     updateDisplay();
 }
 
@@ -163,35 +204,35 @@ function toggleSign() {
     updateDisplay();
 }
 
-// FUNÇÃO CORRIGIDA PARA PORCENTAGEM
+// FIXED FUNCTION FOR PERCENTAGE
 function percentage() {
     const current = parseFloat(currentInput);
     
     if (isNaN(current)) return;
     
-    // Se não houver operação anterior, simplesmente divide por 100
+    // If there's no previous operation, simply divide by 100
     if (!operation) {
         currentInput = (current / 100).toString();
     } 
-    // Se houver uma operação pendente, calcule a porcentagem com base no valor anterior
+    // If there's a pending operation, calculate percentage based on previous value
     else {
         const prev = parseFloat(previousInput);
         
         switch (operation) {
             case '+':
-                // Para adição, calculamos X% de Y e somamos a Y
+                // For addition, calculate X% of Y and add to Y
                 currentInput = ((prev * current) / 100).toString();
                 break;
             case '-':
-                // Para subtração, calculamos X% de Y e subtraímos de Y
+                // For subtraction, calculate X% of Y and subtract from Y
                 currentInput = ((prev * current) / 100).toString();
                 break;
             case '*':
-                // Para multiplicação, dividimos o percentual por 100
+                // For multiplication, divide percentage by 100
                 currentInput = (current / 100).toString();
                 break;
             case '/':
-                // Para divisão, dividimos o percentual por 100
+                // For division, divide percentage by 100
                 currentInput = (current / 100).toString();
                 break;
         }
@@ -206,7 +247,7 @@ updateDisplay();
 // Add keyboard support
 document.addEventListener('keydown', (e) => {
     if (e.key >= '0' && e.key <= '9') appendNumber(e.key);
-    else if (e.key === '.') appendNumber('.');
+    else if (e.key === '.' || e.key === ',') appendNumber(',');
     else if (e.key === '+') operator('+');
     else if (e.key === '-') operator('-');
     else if (e.key === '*') operator('*');
