@@ -20,8 +20,8 @@ clearButton.addEventListener('click', handleClear);
 function formatNumberForDisplay(number) {
     // Check for error messages
     if (typeof number === 'string' && 
-        (number === 'Indefinido' || number === 'Indeterminado' || 
-         number === 'Erro' || number === 'Overflow')) {
+        (number === 'Undefined' || number === 'Indeterminate' || 
+         number === 'Error' || number === 'Overflow')) {
         return number;
     }
     
@@ -123,25 +123,31 @@ function getOperatorSymbol(op) {
 
 function appendNumber(number) {
     // Don't allow input if we're showing an error message
-    if (currentInput === 'Indefinido' || currentInput === 'Indeterminado' || 
-        currentInput === 'Erro' || currentInput === 'Overflow') {
+    if (currentInput === 'Undefined' || currentInput === 'Indeterminate' || 
+        currentInput === 'Error' || currentInput === 'Overflow') {
         clearAll();
     }
     
     // Convert comma to dot for internal calculations
     if (number === ',') {
-        number = '.';
-    }
-    
-    if (currentInput === '0' || resetInput) {
-        currentInput = number;
-        resetInput = false;
+        // If decimal point is first input or after reset, ensure it's prepended with zero
+        if (currentInput === '0' || resetInput) {
+            currentInput = '0.';
+            resetInput = false;
+        } else {
+            currentInput += '.';
+        }
     } else {
-        currentInput += number;
+        if (currentInput === '0' || resetInput) {
+            currentInput = number;
+            resetInput = false;
+        } else {
+            currentInput += number;
+        }
     }
     
     // Prevent multiple decimal points
-    if (number === '.' && currentInput.split('.').length > 2) {
+    if (number === ',' && currentInput.split('.').length > 2) {
         currentInput = currentInput.slice(0, -1);
     }
     
@@ -153,8 +159,8 @@ function appendNumber(number) {
 
 function operator(op) {
     // Don't allow operations if we're showing an error message
-    if (currentInput === 'Indefinido' || currentInput === 'Indeterminado' || 
-        currentInput === 'Erro' || currentInput === 'Overflow') {
+    if (currentInput === 'Undefined' || currentInput === 'Indeterminate' || 
+        currentInput === 'Error' || currentInput === 'Overflow') {
         clearAll();
         return;
     }
@@ -189,9 +195,9 @@ function calculate() {
     // Handle division by zero
     if (operation === '/' && current === 0) {
         if (prev === 0) {
-            currentInput = 'Indeterminado'; // 0/0 is indeterminate
+            currentInput = 'Indeterminate'; // 0/0 is indeterminate
         } else {
-            currentInput = 'Indefinido'; // x/0 is undefined
+            currentInput = 'Undefined'; // x/0 is undefined
         }
         operation = null;
         resetInput = true;
@@ -219,7 +225,7 @@ function calculate() {
     
     // Check for other calculation errors or overflows
     if (!isFinite(result)) {
-        currentInput = 'Erro';
+        currentInput = 'Error';
         operation = null;
         resetInput = true;
         allClear = true;
@@ -256,8 +262,8 @@ function calculate() {
 
 function toggleSign() {
     // Don't toggle sign if we're showing an error message
-    if (currentInput === 'Indefinido' || currentInput === 'Indeterminado' || 
-        currentInput === 'Erro' || currentInput === 'Overflow') {
+    if (currentInput === 'Undefined' || currentInput === 'Indeterminate' || 
+        currentInput === 'Error' || currentInput === 'Overflow') {
         return;
     }
     
@@ -268,8 +274,8 @@ function toggleSign() {
 // Percentage function
 function percentage() {
     // Don't calculate percentage if we're showing an error message
-    if (currentInput === 'Indefinido' || currentInput === 'Indeterminado' || 
-        currentInput === 'Erro' || currentInput === 'Overflow') {
+    if (currentInput === 'Undefined' || currentInput === 'Indeterminate' || 
+        currentInput === 'Error' || currentInput === 'Overflow') {
         return;
     }
     
