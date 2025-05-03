@@ -88,7 +88,7 @@ body {
 }
 
 .display {
-    background-color: #0f0d0d;
+    background-color: #000000; /* Changed to pure black */
     color: white;
     font-family: 'Montserrat', sans-serif;
 }
